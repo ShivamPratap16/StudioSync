@@ -1,21 +1,80 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose  , {Schema , Document} from 'mongoose';
 
-export interface IUser extends Document {
-    username: string;
-    email: string;
-    password: string;
-    createdAt: Date;
-    updatedAt: Date;
+export interface Iuser extends Document{
+
+    name : string;
+    email : string;
+    password?: string;
+    role : 'youtuber '| 'User';
+    avatarurl?: string;
+    googleId?: string;
+    editorrating? : {
+     average : number;
+     totaolreviews: number;};
+
+    
+
+createdAt?: Date;
+    updatedAt?: Date;
+
+
+
+
 }
 
-const UserSchema: Schema = new Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-}, {
-    timestamps: true,
+const userSchema : Schema = new Schema<Iuser>({
+
+    name : {
+        type : String ,
+        required: true,
+        trim: true,
+    },
+    
+  email: {
+    type : String, 
+    required: true,
+    unique: true,
+    trim : true,
+    lowecase : true,
+  }
+  , password: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  role: {
+    type: String,
+    enum: ['youtuber', 'User'],
+    default: 'User',
+  },
+  avatarurl: {
+    type: String,
+  },        
+  googleId: {
+    type: String,
+    },
+    editorrating: { 
+        average: {
+            type: Number,   
+
+
+            default: 0,
+        },
+        totaolreviews: {
+            type: Number,
+            default: 0,
+        },
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const User = mongoose.model<Iuser>('User', userSchema);
 
-export default User;
+export default mongoose.models.User|| mongoose.model<Iuser>('User', userSchema)  ;
