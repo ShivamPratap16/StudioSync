@@ -15,7 +15,7 @@ export interface Iuser extends Document{
     
 
 createdAt?: Date;
-    updatedAt?: Date;
+updatedAt?: Date;
 
 
 
