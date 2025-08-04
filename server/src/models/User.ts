@@ -1,80 +1,23 @@
-import mongoose  , {Schema , Document} from 'mongoose';
+import mongoose from "mongoose";
 
-export interface Iuser extends Document{
+const userSchema = new mongoose.Schema(
+  {
+    name: String,
+    email: { type: String, required: true, unique: true },
+    password: String, // only for email/password users
+    role: { type: String, enum: ["editor", "youtuber"], required: true },
 
-    name : string;
-    email : string;
-    password?: string;
-    role : 'youtuber '| 'User';
-    avatarurl?: string;
-    googleId?: string;
-    editorrating? : {
-     average : number;
-     totaolreviews: number;};
+    // Google OAuth
+    googleId: String,
+    profilePic: String,
 
-    
-
-createdAt?: Date;
-updatedAt?: Date;
-
-
-
-
-}
-
-const userSchema : Schema = new Schema<Iuser>({
-
-    name : {
-        type : String ,
-        required: true,
-        trim: true,
-    },
-    
-  email: {
-    type : String, 
-    required: true,
-    unique: true,
-    trim : true,
-    lowecase : true,
-  }
-  , password: {
-    type: String,
-    required: true,
-    trim: true,
+    // YouTube Access
+    youtubeAccessToken: String,
+    youtubeRefreshToken: String,
+    googleAuthGranted: { type: Boolean, default: false },
+    youtubeUploadAccess: { type: Boolean, default: false },
   },
-  role: {
-    type: String,
-    enum: ['youtuber', 'User'],
-    default: 'User',
-  },
-  avatarurl: {
-    type: String,
-  },        
-  googleId: {
-    type: String,
-    },
-    editorrating: { 
-        average: {
-            type: Number,   
+  { timestamps: true }
+);
 
-
-            default: 0,
-        },
-        totaolreviews: {
-            type: Number,
-            default: 0,
-        },
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
-
-const User = mongoose.model<Iuser>('User', userSchema);
-
-export default mongoose.models.User|| mongoose.model<Iuser>('User', userSchema)  ;
+export const User = mongoose.model("User", userSchema);
